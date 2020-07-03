@@ -1,0 +1,103 @@
+1. Assume that an array stores integers and has a maximum size of 100. One array is
+used to store two distinct data structures, BOTH a queue and a stack.
+• Write a function that pushes an integer into the stack.
+• Write a function that pops an integer from the stack.
+• Write a function that enqueues an integer into the queue.
+• Write a function that dequeues an integer from the queue.
+
+import java.io.*; 
+import java.util.*; 
+
+public class Stack{
+    private int count;
+    private int qindex;
+    private int[] arr;
+    
+    Stack(){
+        arr = new int[100];
+        count = -1;
+        qindex = 49;
+    }
+    
+    
+    public void pushStack(int number){
+        //if stack reaches capacity, throw error overflow
+        if(count + 1 >= arr.length/2){
+            System.out.println("stack is full");
+            return;
+        }
+        //increment index & add number
+        count++;
+        arr[count] = number;
+    }
+    
+    public void popStack(){
+        if(count < 0){
+            throw new EmptyStackException();
+        }
+        else{
+            count--;
+        }
+    }
+    
+    public void enqueue(int number){
+        //if queue reaches capacity, increase capacity
+        if(qindex + 1 >= arr.length){
+            System.out.println("Queue is full");
+            return;
+        }
+        arr[qindex] = number;
+        qindex++;
+    }
+    
+    public void dequeue(){
+        int size = arr.length/2;
+        if(qindex < size - 1){
+            System.out.println("Queue empty!");
+            return;
+        }
+        else{
+            /* 1. create new temp array 
+            *  2. copy stack to temp
+            *  3. copy queue w/out 0th index to temp
+            *  3. arr = temp
+            */
+            int[] temp = new int[arr.length];
+            for(int i = 0; i < size; i++){
+                temp[i] = arr[i];
+            }
+            for(int i = 0 + size - 1; i < arr.length - 1; i++){
+                temp[i] = arr[i+1];
+            }
+            arr = temp;
+            qindex--;
+        }
+    }
+    //debugging array
+    public void display(){
+        for(int i = 0; i < arr.length; i++){
+                System.out.println("Index: " + i + " " + "Element" + arr[i]);    
+        }
+    }
+    
+    public static void main(String []args){
+        Stack stack = new Stack();
+        stack.pushStack(3);
+        stack.pushStack(5);
+        stack.enqueue(50);
+        stack.dequeue();
+        stack.enqueue(60);
+        stack.enqueue(70);
+        stack.enqueue(80);
+        stack.dequeue();
+        stack.dequeue();
+        stack.display();
+    }
+}
+
+2. 2. Assume that a program has over 1 billion lines of code. During production, the
+program produces a segmentation fault. Without using a debugger, describe a
+possible debugging process or approach that could be used to pinpoint the exact
+line that is causing the segmentation fault.
+
+Well, first a segmentation fault, commonly used in C, is when the program crashses due to illegal memory location, identitcal to OutofBoundsExceptions in Java. Through this, we know that somewhere in our code, we had assigned values to memory, more so in arrays. So I would go through main() step through helper functions, make sure variables and assigned values are correctly added and use break points. Eventually we will encounter a block of code that misassigns a value and causes this segmentation fault, mostly typical in array loops. It is important to manually "step" through code and functions so that we slow ourselves down and make sure memory is being assigned proper value.
